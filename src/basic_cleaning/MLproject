@@ -1,0 +1,14 @@
+name: basic_cleaning
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      Performs basic cleaning on the data and save the results in Weights & Biases:
+        description: ## ADD DESCRIPTION
+        type: string
+
+
+    command: >-
+        python run.py  --Performs basic cleaning on the data and save the results in Weights & Biases {Performs basic cleaning on the data and save the results in Weights & Biases} 
