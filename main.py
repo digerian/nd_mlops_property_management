@@ -20,6 +20,7 @@ _steps = [
 ]
 
 
+
 # This automatically reads in the configuration
 @hydra.main(config_name='config')
 def go(config: DictConfig):
@@ -27,6 +28,9 @@ def go(config: DictConfig):
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
     os.environ["WANDB_RUN_GROUP"] = config["main"]["experiment_name"]
+
+    # You can get the path at the root of the MLflow project with this:
+    root_path = hydra.utils.get_original_cwd()
 
     # Steps to execute
     steps_par = config['main']['steps']
@@ -48,11 +52,19 @@ def go(config: DictConfig):
                 },
             )
 
+
         if "basic_cleaning" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            _ = mlflow.run(
+                os.path.join(root_path, "src/basic_cleaning"),
+                "main",
+                parameters={
+                    "file_url": config["data"]["file_url"],
+                    "artifact_name": "raw_data.parquet",
+                    "artifact_type": "raw_data",
+                    "artifact_description": "Data as downloaded"
+                },
+            )
+
 
         if "data_check" in active_steps:
             ##################
