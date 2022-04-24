@@ -127,11 +127,10 @@ def go(config: DictConfig):
                 f"{config['main']['components_repository']}/test_regression_model",
                 "main",
                 parameters={
-                    "input": "clean_sample.csv:latest",
-                    "test_size": config["modeling"]["test_size"],
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest",
                 },
             )
-
 
 
 if __name__ == "__main__":
