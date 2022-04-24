@@ -53,24 +53,35 @@ def go(config: DictConfig):
             )
 
 
+
+
         if "basic_cleaning" in active_steps:
             _ = mlflow.run(
-                os.path.join(root_path, "src/basic_cleaning"),
-                "main",
-                parameters={
-                    "file_url": config["data"]["file_url"],
-                    "artifact_name": "raw_data.parquet",
-                    "artifact_type": "raw_data",
-                    "artifact_description": "Data as downloaded"
-                },
-            )
-
+                 os.path.join(hydra.utils.get_original_cwd(), "src", "basic_cleaning"),
+                 "main",
+                 parameters={
+                     "input_artifact": "sample.csv:latest",
+                     "output_artifact": "clean_sample.csv",
+                     "output_type": "clean_sample",
+                     "output_description": "Data with outliers and null values removed",
+                     "min_price": config['etl']['min_price'],
+                     "max_price": config['etl']['max_price']
+                 },
+             )
 
         if "data_check" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            _ = mlflow.run(
+                 os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
+                 "main",
+                 parameters={
+                     "csv": "clean_sample.csv:latest",
+                     "ref": "clean_sample.csv:reference",
+                     "kl_threshold": config["data_check"]["kl_threshold"],
+                     "min_price": config['etl']['min_price'],
+                     "max_price": config['etl']['max_price']
+                 },
+             )
+
 
         if "data_split" in active_steps:
             ##################
