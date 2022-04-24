@@ -54,7 +54,8 @@ def go(args):
     ######################################
     # Use run.use_artifact(...).file() to get the train and validation artifact (args.trainval_artifact)
     # and save the returned path in train_local_pat
-    trainval_local_path = # YOUR CODE HERE
+
+    trainval_local_path = run.use_artifact(args.trainval_artifact).file()
     ######################################
 
     X = pd.read_csv(trainval_local_path)
@@ -100,7 +101,7 @@ def go(args):
     # HINT: use mlflow.sklearn.save_model
     # YOUR CODE HERE
     ######################################
-    mlflow.sklearn.save_model(sk_pipe, './random_forest_dir', conda_env=None, code_paths=None)
+    mlflow.sklearn.save_model(sk_pipe, './random_forest_dir')
 
 
     ######################################
@@ -111,13 +112,13 @@ def go(args):
     # run.log_artifact to log the artifact to the run
     # YOUR CODE HERE
     ######################################
+
     artifact = wandb.Artifact(
         name=args.output_artifact,
-        type="model_export"
+        type="model_export",
         description='exported model',
-        rf_config=config['modeling']
+        metadata=rf_config
     )
-
     artifact.add_dir('./random_forest_dir')
 
     run.log_artifact(artifact)
@@ -135,7 +136,8 @@ def go(args):
     run.summary['r2'] = r_squared
     # Now log the variable "mae" under the key "mae".
     # YOUR CODE HERE
-    ######################################
+    ##############################
+    run.summary['mae'] = mae
 
     # Upload to W&B the feture importance visualization
     run.log(
@@ -176,7 +178,12 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
     # Build a pipeline with two steps:
     # 1 - A SimpleImputer(strategy="most_frequent") to impute missing values
     # 2 - A OneHotEncoder() step to encode the variable
-    non_ordinal_categorical_preproc = # YOUR CODE HERE
+
+    non_ordinal_categorical_preproc = make_pipeline(
+        SimpleImputer(strategy="most_frequent", fill_value=""),
+        OneHotEncoder(),
+    )
+    # YOUR CODE HERE
     ######################################
 
     # Let's impute the numerical columns to make sure we can handle missing values
@@ -238,7 +245,7 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
     sk_pipe = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", random_forest),
+            ("random_forest", random_Forest),
         ]
     )
     return sk_pipe, processed_features
