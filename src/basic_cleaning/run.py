@@ -2,6 +2,7 @@
 """
 Performs basic cleaning on the data and save the results in Weights & Biases
 """
+Add docstrings and the proper type to all parameters, both in the script and in the MLproject file.
 import argparse
 import logging
 import wandb
@@ -14,25 +15,21 @@ logger = logging.getLogger()
 
 
 def go(args):
-
+    """
+    executing the basic cleaning
+    """
     run = wandb.init(job_type="basic_cleaning")
     run.config.update(args)
-
-
 
     # Download input artifact. This will also log that this script is using this
     # particular version of the artifact
     # artifact_local_path = run.use_artifact(args.input_artifact).file()
 
-    ######################
-    # YOUR CODE HERE     #
-    ######################
     logger.info("Downloading artifact")
     artifact = run.use_artifact(args.input_artifact)
     artifact_path = artifact.file()
 
     df = pd.read_csv(artifact_path, low_memory=False)
-
 
     # Drop the duplicates
     logger.info("Dropping duplicates")
@@ -56,6 +53,7 @@ def go(args):
         type=args.output_type,
         description=args.output_description,
     )
+
     artifact.add_file(filename)
 
     logger.info("Logging artifact")

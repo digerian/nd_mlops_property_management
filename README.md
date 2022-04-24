@@ -6,6 +6,11 @@ to be retrained with the same cadence, necessitating an end-to-end pipeline that
 
 In this project you will build such a pipeline.
 
+# Links
+Github Repo: https://github.com/digerian/nd_mlops_property_management
+W&B: https://wandb.ai/dvdata/nyc_airbnb?workspace=user-dvdata
+Pipeline plot: https://wandb.ai/dvdata/nyc_airbnb/artifacts/model_export/random_forest_export/8a967da20584a6414f74/graph
+
 ## Table of contents
 
 - [Introduction](#build-an-ML-Pipeline-for-Short-Term-Rental-Prices-in-NYC)

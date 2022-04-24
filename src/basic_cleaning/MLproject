@@ -13,19 +13,19 @@ entry_points:
         type: string
 
       output_description:
-        description: Type of the output artifact. This will be used to categorize the artifact in t
+        description: A brief description of the output artifact.
         type: string
 
       output_type:
-        description: A brief description of the output artifact
+        description: This will be used to categorize the artifact in W&B
         type: string
 
       min_price:
-        description: A brief description of the output artifact
+        description: mininum price for properties
         type: float
 
       max_price:
-        description: A brief description of the output artifact
+        description: maximum price for properties
         type: float
 
     command: >-
